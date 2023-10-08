@@ -1,0 +1,61 @@
+stages:
+  - package
+  - deploy
+docker-build-develop:
+  stage: package
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - echo "Running on branch 'develop'"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:develop" .
+    - docker push "$CI_REGISTRY_IMAGE:develop"
+  only:
+    - develop
+
+docker-build-master:
+  stage: package
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - echo "Running on branch 'master'"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+  only:
+    - master
+
+build-to-swr-irsx:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u ap-southeast-4@CSXEKMBVS3PE8CXXUYEL -p 881ca8d0e9c2e53635ca119c8555909dd9c21cb673d8f21e582cab9a18065f61 swr.ap-southeast-4.myhuaweicloud.com
+  script:
+    - echo "IRSX";
+    - docker build -t swr.ap-southeast-4.myhuaweicloud.com/irsx/productdigital:$CI_COMMIT_REF_SLUG .
+    - docker push swr.ap-southeast-4.myhuaweicloud.com/irsx/productdigital:$CI_COMMIT_REF_SLUG
+
+  only:
+    - tags
+  except:
+    - /^tsel-.*$/
+
+build-to-swr-tsel:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u ap-southeast-4@IXZJEPWAFB6CNNAO6NCZ -p ceb4e926b28448c4a9dddb4cef5fe60eb51919b17d8d49eb392a42017dfd69fc swr.ap-southeast-4.myhuaweicloud.com;
+  script:
+    - echo "TELKOMSEL";
+    - docker build -t swr.ap-southeast-4.myhuaweicloud.com/koperasidigital/koperasidigital_productdigital:$CI_COMMIT_REF_SLUG .
+    - docker push swr.ap-southeast-4.myhuaweicloud.com/koperasidigital/koperasidigital_productdigital:$CI_COMMIT_REF_SLUG
+  only:
+    - /^tsel-.*$/

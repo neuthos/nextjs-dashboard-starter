@@ -1,0 +1,479 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================== FONT */
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("../../public/inter/Inter-Thin.woff2") format("woff2"),
+       url("../../public/inter/Inter-Thin.woff") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 100;
+  font-display: swap;
+  src: url("../../public/inter/Inter-ThinItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-ThinItalic.woff") format("woff");       
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("../../public/inter/Inter-ExtraLight.woff2") format("woff2"),
+       url("../../public/inter/Inter-ExtraLight.woff") format("woff");       
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url("../../public/inter/Inter-ExtraLightItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-ExtraLightItalic.woff") format("woff");       
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../../public/inter/Inter-Light.woff2") format("woff2"),
+       url("../../public/inter/Inter-Light.woff") format("woff");       
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../../public/inter/Inter-LightItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-LightItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../public/inter/Inter-Regular.woff2") format("woff2"),
+       url("../../public/inter/Inter-Regular.woff") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../public/inter/Inter-Italic.woff2") format("woff2"),
+       url("../../public/inter/Inter-Italic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../../public/inter/Inter-Medium.woff2") format("woff2"),
+       url("../../public/inter/Inter-Medium.woff") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../../public/inter/Inter-MediumItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-MediumItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../../public/inter/Inter-SemiBold.woff2") format("woff2"),
+       url("../../public/inter/Inter-SemiBold.woff") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../../public/inter/Inter-SemiBoldItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-SemiBoldItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../../public/inter/Inter-Bold.woff2") format("woff2"),
+       url("../../public/inter/Inter-Bold.woff") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../../public/inter/Inter-BoldItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("../../public/inter/Inter-ExtraBold.woff2") format("woff2"),
+       url("../../public/inter/Inter-ExtraBold.woff") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url("../../public/inter/Inter-ExtraBoldItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-ExtraBoldItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("../../public/inter/Inter-Black.woff2") format("woff2"),
+       url("../../public/inter/Inter-Black.woff") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url("../../public/inter/Inter-BlackItalic.woff2") format("woff2"),
+       url("../../public/inter/Inter-BlackItalic.woff") format("woff");
+}
+
+@supports (font-variation-settings: normal) {
+  :root { 
+    font-family: 'Inter', -apple-system,  sans-serif !important;
+  }
+}
+/* ================================= FONT */
+
+:root {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: var(--background-color);
+  font-family: 'Inter', sans-serif !important; 
+}
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+
+p {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 125%;
+  letter-spacing: -0.08px;
+}
+
+.text-fix {
+  color: var(--global-body-color, #2D353C);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 125%; /* 10px */
+  letter-spacing: -0.08px;
+}
+
+h1, h2, h3, h4, h5, h6, p, span {
+  margin: 0;
+  padding: 0;
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  color: white !important;
+}
+
+/* Sidebar Custom */
+.sidebar-custom {
+  box-shadow: -8px 0px 8px 0px rgba(0, 0, 0, 0.03) inset;
+  background: #FBFBFC;
+}
+
+/* Select Custom */
+.ant-select-selector {
+  height: 40px !important;
+  padding: 6px 8px !important;
+}
+
+/* Card Custom */
+.ant-card .detail-card .ant-card-body {
+  padding: 10px !important;
+}
+
+/* Form Custom */
+.ant-form-vertical .ant-form-item-label {
+  padding: 0 0 4px !important;
+}
+
+/* Modal Custom */
+.table-header-custom .ant-modal-content {
+  padding: 0 !important;
+}
+.table-header-custom .ant-modal-content .ant-modal-header .ant-modal-title {
+  color: #FFF;
+}
+
+.table-header-custom .ant-modal-content .ant-modal-close .ant-modal-close-x span svg {
+  color: #FFF !important;
+}
+
+.lengkapi-profile-head {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(5px);
+}
+
+/* Upload File */
+.ant-upload.ant-upload-drag.test {
+  height: auto;
+  background: none;
+  border: none;
+  position: relative;
+}
+
+.wallet-list .ant-collapse-header-text {
+  font-weight: bold;
+}
+
+.wallet-list .ant-collapse-content-box {
+  padding-top: 0 !important;
+}
+
+.ant-menu-light {
+  background: none;
+}
+
+.ant-menu-vertical >.ant-menu-submenu>.ant-menu-submenu-title {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  /* background-color: #5d15ed; */
+}
+
+.ant-menu-light.ant-menu-root.ant-menu-inline {
+  border-inline-end: none ;
+}
+
+.stok-allowance .ant-table-tbody > tr > td,
+.stok-allowance .ant-table-thead > tr > th {
+  padding: 0px !important;
+  text-align: center !important;
+  font-size: 10px !important;
+  border-style: dashed !important;
+  border-color: #333 !important;
+  border-bottom: none !important;
+}
+
+.dash-finance-payment .ant-table-tbody > tr > td,
+.dash-finance-payment .ant-table-thead > tr > th {
+  padding: 5px !important;
+  text-align: center !important;
+  font-size: 12px !important;
+}
+
+.ant-table-container table > thead > tr:first-child th:last-child {
+  border-top-right-radius: 8px !important;
+}
+
+.ant-table-container table > thead > tr:first-child th:first-child {
+  border-top-left-radius: 8px !important;
+}
+
+.chart-container {
+  position: relative;
+  margin: auto;
+  height: auto;
+  width: 100%;
+}
+
+.chart-container-finance {
+  position: relative;
+  margin: auto;
+  height: auto;
+  width: 100%;
+}
+
+.ant-menu-light .ant-menu-item {
+  background-color: none;
+}
+.ant-menu-light .ant-menu-item-selected {
+  color: white !important;
+}
+
+.ant-menu-light.ant-menu-root.ant-menu-vertical {
+  border-inline-end: none
+}
+
+
+
+/* ================================================================ */
+
+.ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+  background: none;
+}
+
+.ant-table
+  .ant-table-container
+  .ant-table-content
+  table
+  thead.ant-table-thead
+  .ant-table-cell {
+  background-color: #F8F9FA;
+}
+
+.card-primary .ant-modal-content {
+  padding: 0px !important;
+}
+
+.card-primary-warning .ant-modal-content {
+  padding: 0px !important;
+}
+
+.card-primary .ant-modal-header {
+  color: #fff;
+  padding: 16px 24px;
+  margin: 0px;
+  background-image: url("../assets/Background/bg accent.svg");
+}
+
+.card-primary-warning .ant-modal-header {
+  color: #000;
+  height: 60px;
+  padding: 16px 24px;
+  margin: 0px;
+  border-bottom: 1px solid var(--theme-color-inverse-transparency-100, rgba(0, 0, 0, 0.10));
+  background: var(--theme-color-warning-100, #FDEBD1);
+}
+
+
+.card-primary .ant-modal-close-x {
+  color: white;
+  margin-top: 8px;
+}
+
+.card-primary-warning .ant-modal-close-x {
+  color: black;
+  margin-top: 8px;
+}
+
+.card-primary .ant-modal-title {
+  color: white;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: -0.56px;
+}
+
+.card-primary-warning .ant-modal-title {
+  color: black;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: -0.56px;
+}
+
+.card-token-bg {
+  background-color: #f2e6ff;
+  padding: 24px;
+  border-radius: 16px;
+}
+
+.custom-radio-button input[type="radio"] + span {
+  width: 21px;
+  height: 21px;
+  background-color: none !important;
+} 
+
+.custom-radio-button input[type="radio"] + span:hover {
+  border-width: 6px !important;
+}
+
+.custom-radio-button input[type="radio"]:checked + span {
+  border-width: 6px;
+  background-color: whitesmoke !important;
+
+}
+
+.custom-radio-button .ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  background-color: whitesmoke !important;
+}
+
+.ant-checkbox-inner {
+  width: 20px !important; 
+  height: 20px !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner::after {
+  margin-left: 1px;
+  /* transform: translate(-50%, -50%) scale(1);  */
+}
+
+.ant-select-selection-search-input {
+  height: 100% !important;
+}
+
+.table-mutation-container {
+  border-radius: 8px;
+  border: 1px solid #DEE2E6;
+  background-color: #F8F9FA;
+}
+
+.table-mutation {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden; 
+  font-size: 6px;
+  border-radius: 8px;
+  border: 1px solid #DEE2E6;
+}
+
+.table-mutation th:first-of-type {
+  border-top-left-radius: 8px;
+}
+.table-mutation th:last-of-type {
+  border-top-right-radius: 8px;
+}
+.table-mutation tr:last-of-type td:first-of-type {
+  border-bottom-left-radius: 8px;
+}
+.table-mutation tr:last-of-type td:last-of-type {
+  border-bottom-right-radius: 8px;
+}
+
+.table-mutation th, .table-mutation td {
+  padding: 8px;
+  text-align: left; 
+  background-color: white;
+}
+
+.table-mutation th {
+  background-color: #F8F9FA;
+}
+
+@media print {
+  @page {
+    size: A5 landscape;
+  }
+}

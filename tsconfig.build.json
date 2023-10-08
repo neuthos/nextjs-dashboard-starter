@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "./out/**/*",
+    "./node_modules/**/*",
+    "cypress/**/*.ts",
+    "./src/tsremote_declarations.ts"
+  ]
+}

@@ -1,0 +1,44 @@
+<svg width="620" height="80" viewBox="0 0 620 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="bg accent" clip-path="url(#clip0_626_86432)">
+<rect width="620" height="80" fill="url(#paint0_radial_626_86432)"/>
+<g id="Big Circles">
+<g id="Ellipse" style="mix-blend-mode:multiply" opacity="0.75" filter="url(#filter0_i_626_86432)">
+<ellipse cx="436" cy="440" rx="581" ry="593" transform="rotate(90 436 440)" fill="white"/>
+</g>
+<g id="Ellipse_2" style="mix-blend-mode:multiply" opacity="0.75" filter="url(#filter1_i_626_86432)">
+<ellipse cx="424.5" cy="457" rx="450" ry="459.5" transform="rotate(90 424.5 457)" fill="white"/>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_i_626_86432" x="-157" y="-141" width="1200.51" height="1181.35" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="14.5143" operator="erode" in="SourceAlpha" result="effect1_innerShadow_626_86432"/>
+<feOffset dx="14.5143" dy="19.3525"/>
+<feGaussianBlur stdDeviation="55.6383"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0235294 0 0 0 0 0.0313726 0 0 0 0 0.34902 0 0 0 0.75 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_626_86432"/>
+</filter>
+<filter id="filter1_i_626_86432" x="-35.0002" y="7.00031" width="933.514" height="919.352" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="14.5143" operator="erode" in="SourceAlpha" result="effect1_innerShadow_626_86432"/>
+<feOffset dx="14.5143" dy="19.3525"/>
+<feGaussianBlur stdDeviation="55.6383"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0235294 0 0 0 0 0.0313726 0 0 0 0 0.34902 0 0 0 0.75 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_626_86432"/>
+</filter>
+<radialGradient id="paint0_radial_626_86432" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(310 40) rotate(90) scale(120.741 224.964)">
+<stop stop-color="#8850F7"/>
+<stop offset="1" stop-color="#5D15ED"/>
+</radialGradient>
+<clipPath id="clip0_626_86432">
+<rect width="620" height="80" fill="white"/>
+</clipPath>
+</defs>
+</svg>
