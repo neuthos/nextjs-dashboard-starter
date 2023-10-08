@@ -88,7 +88,7 @@ function App({
                 fontWeightStrong: 700,
               },
               Button: {
-                controlHeight: 44,
+                controlHeight: 35,
                 // fontSize: 16,
                 // fontWeightStrong: 700,
               },
