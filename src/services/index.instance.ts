@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import { getSession, signIn } from 'next-auth/react';
 
 const ApiInterface = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/simpin`,
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/productdigital`,
 });
 
 const onRequest = async (

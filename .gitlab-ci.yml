@@ -55,7 +55,7 @@ build-to-swr-tsel:
     - docker login -u ap-southeast-4@IXZJEPWAFB6CNNAO6NCZ -p ceb4e926b28448c4a9dddb4cef5fe60eb51919b17d8d49eb392a42017dfd69fc swr.ap-southeast-4.myhuaweicloud.com;
   script:
     - echo "TELKOMSEL";
-    - docker build -t swr.ap-southeast-4.myhuaweicloud.com/koperasidigital/koperasidigital_productdigital:$CI_COMMIT_REF_SLUG .
-    - docker push swr.ap-southeast-4.myhuaweicloud.com/koperasidigital/koperasidigital_productdigital:$CI_COMMIT_REF_SLUG
+    - docker build -t swr.ap-southeast-4.myhuaweicloud.com/koperasidigital/productdigital:$CI_COMMIT_REF_SLUG .
+    - docker push swr.ap-southeast-4.myhuaweicloud.com/koperasidigital/productdigital:$CI_COMMIT_REF_SLUG
   only:
     - /^tsel-.*$/

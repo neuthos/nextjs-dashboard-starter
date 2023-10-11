@@ -25,7 +25,7 @@ export const Authorize: React.FC<{
     ['Health-check'],
     async () => {
       const req = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/member/health-check`,
+        `https://stg-api.aviana.id/api/member/health-check`,
         {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,

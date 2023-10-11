@@ -1,32 +1,18 @@
+import { useQuery } from '@tanstack/react-query';
 import { Button, Table } from 'antd';
 import dynamic from 'next/dynamic';
+import { useState } from 'react';
 
 import EditIcon from '@/components/reuse/Button/Edit';
 import { HeadCustom } from '@/components/reuse/header.reuse';
 import routeState from '@/components/reuse/StateRouteHandler';
 import SwitchCustom from '@/components/reuse/SwitchCustom';
 import getColumnSearchProps from '@/components/reuse/Table/getColumnSearchProps';
-
-const dataSource = [
-  {
-    name: 'Supplier 1',
-    status: 'Aktif',
-    key: '1',
-  },
-  {
-    name: 'Supplier 2',
-    status: 'Aktif',
-    key: '2',
-  },
-  {
-    name: 'Supplier 3',
-    status: 'Aktif',
-    key: '3',
-  },
-  // Tambahkan lebih banyak data jika diperlukan
-];
+import SupplierService from '@/services/supplier.service';
 
 const ListSupplier = () => {
+  const [page, setPage] = useState(1);
+  const [nameSearch, setNameSearch] = useState('');
   const columns: any = [
     {
       title: 'No',
@@ -43,6 +29,7 @@ const ListSupplier = () => {
       ...getColumnSearchProps({
         dataIndex: 'name',
         placeholder: 'Nama Supplier',
+        onSearch: setNameSearch,
       }),
     },
     {
@@ -50,10 +37,10 @@ const ListSupplier = () => {
       dataIndex: 'status',
       key: 'status',
       filters: [],
-      render: () => {
+      render: (val: number) => {
         return (
           <div>
-            <SwitchCustom checked={true} disabled />
+            <SwitchCustom checked={val === 1} disabled />
           </div>
         );
       },
@@ -78,6 +65,11 @@ const ListSupplier = () => {
     },
   ];
 
+  const { data: suppliers, isLoading } = useQuery({
+    queryKey: [SupplierService.Queries.LIST_SUPPLIER, page],
+    queryFn: () => SupplierService.list({ page, limit: 10, name: nameSearch }),
+  });
+
   return (
     <>
       <HeadCustom
@@ -101,12 +93,17 @@ const ListSupplier = () => {
 
       <div className="p-5">
         <Table
-          rowKey={'id'}
+          rowKey={'uuid'}
           className="mt-3"
           columns={columns}
-          dataSource={dataSource}
-          loading={false}
-          pagination={false}
+          dataSource={suppliers?.content || []}
+          loading={isLoading}
+          pagination={{
+            current: page,
+            pageSize: 10,
+            total: suppliers ? suppliers.totalItems : 0,
+            onChange: setPage,
+          }}
         />
       </div>
     </>
