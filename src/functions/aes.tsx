@@ -25,3 +25,10 @@ export function decryptAES256(
     return null;
   }
 }
+
+export function generateRandomKey64Bit() {
+  const randomBytes = CryptoJS.lib.WordArray.random(64);
+  const randomHex = randomBytes.toString(CryptoJS.enc.Hex);
+
+  return randomHex;
+}

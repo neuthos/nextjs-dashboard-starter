@@ -2,10 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Form, Input, message, Space, Typography } from 'antd';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { HeadCustom } from '@/components/reuse/header.reuse';
 import UriHookState from '@/components/reuse/UriHookState';
+import { generateRandomKey64Bit } from '@/functions/aes';
 import SupplierService from '@/services/supplier.service';
 
 const FormSupplier = () => {
@@ -14,6 +15,8 @@ const FormSupplier = () => {
   const [form] = Form.useForm();
   const uriData = UriHookState();
   const pageData = uriData?.data;
+  const secretRef = useRef<any>(null);
+  const publicRef = useRef<any>(null);
 
   const updateData = pageData || null;
   const titlePage = updateData ? 'Update Supplier' : 'Tambah Supplier';
@@ -61,6 +64,16 @@ const FormSupplier = () => {
     }
   };
 
+  const generateRandomKey = (type: string) => {
+    const keyRand = generateRandomKey64Bit();
+
+    if (type === 'PUBLIC') {
+      form.setFieldValue('public_key', keyRand);
+    } else {
+      form.setFieldValue('secret_key', keyRand);
+    }
+  };
+
   const handleSubmit = () => {
     const payload = form.getFieldsValue();
     payload.host = 'google.com';
@@ -72,6 +85,38 @@ const FormSupplier = () => {
       });
     } else {
       addSupplier(payload);
+    }
+  };
+
+  const copyToClipboard = (type: string) => {
+    if (type === 'PUBLIC') {
+      if (publicRef.current) {
+        publicRef.current.select();
+        publicRef.current.setSelectionRange(0, 99999); // For mobile devices
+
+        navigator.clipboard
+          .writeText(publicRef.current.value)
+          .then(() => {
+            message.error('Berhasil salin ke clipboard');
+          })
+          .catch(() => {
+            message.error('Gagal salin ke clipboard');
+          });
+      }
+    } else if (type === 'SECRET') {
+      if (secretRef.current) {
+        secretRef.current.select();
+        secretRef.current.setSelectionRange(0, 99999);
+
+        navigator.clipboard
+          .writeText(secretRef.current.value)
+          .then(() => {
+            message.error('Berhasil salin ke clipboard');
+          })
+          .catch(() => {
+            message.error('Gagal salin ke clipboard');
+          });
+      }
     }
   };
 
@@ -130,12 +175,19 @@ const FormSupplier = () => {
                 },
               ]}
             >
-              <Input.TextArea readOnly={false} />
+              <Input.TextArea readOnly={false} ref={secretRef} />
             </Form.Item>
 
             <Space>
-              <Button type="primary">Buat Secret Key</Button>
-              <Button>Copy ke clipboard</Button>
+              <Button
+                onClick={() => generateRandomKey('SECRET')}
+                type="primary"
+              >
+                Buat Secret Key
+              </Button>
+              <Button onClick={() => copyToClipboard('SECRET')}>
+                Copy ke clipboard
+              </Button>
             </Space>
           </Card>
 
@@ -154,12 +206,19 @@ const FormSupplier = () => {
                 },
               ]}
             >
-              <Input.TextArea readOnly={false} />
+              <Input.TextArea readOnly={false} ref={publicRef} />
             </Form.Item>
 
             <Space>
-              <Button type="primary">Buat Public Key</Button>
-              <Button>Copy ke clipboard</Button>
+              <Button
+                type="primary"
+                onClick={() => generateRandomKey('PUBLIC')}
+              >
+                Buat Public Key
+              </Button>
+              <Button onClick={() => copyToClipboard('PUBLIC')}>
+                Copy ke clipboard
+              </Button>
             </Space>
           </Card>
 
