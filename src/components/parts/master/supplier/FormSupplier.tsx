@@ -53,7 +53,20 @@ const FormSupplier = () => {
     }
   );
 
-  const validateIpAddress = (_: any, value: any, callback: any) => {
+  const validateHost = (_: any, value: any, callback: any) => {
+    const ipOrDomainRegex =
+      /^(https:\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/\S*)?$/;
+
+    if (!ipOrDomainRegex.test(value)) {
+      callback(
+        'Format IP atau nama domain host tidak valid. Gunakan format yang benar (misalnya: "https://example.com" atau "192.3.3.4").'
+      );
+    } else {
+      callback();
+    }
+  };
+
+  const validateIp = (_: any, value: any, callback: any) => {
     const ipRegex = /^(\d{1,3}\.){3}\d{1,3}(,\s*(\d{1,3}\.){3}\d{1,3})*$/;
     if (!ipRegex.test(value)) {
       callback(
@@ -76,7 +89,6 @@ const FormSupplier = () => {
 
   const handleSubmit = () => {
     const payload = form.getFieldsValue();
-    payload.host = 'google.com';
 
     if (updateData) {
       updateSupplier({
@@ -88,35 +100,16 @@ const FormSupplier = () => {
     }
   };
 
-  const copyToClipboard = (type: string) => {
-    if (type === 'PUBLIC') {
-      if (publicRef.current) {
-        publicRef.current.select();
-        publicRef.current.setSelectionRange(0, 99999); // For mobile devices
+  const copyToClipboard = async (type: string) => {
+    try {
+      let val = '';
+      if (type === 'SECRET') val = form.getFieldValue('secret_key');
+      else val = form.getFieldValue('public_key');
 
-        navigator.clipboard
-          .writeText(publicRef.current.value)
-          .then(() => {
-            message.error('Berhasil salin ke clipboard');
-          })
-          .catch(() => {
-            message.error('Gagal salin ke clipboard');
-          });
-      }
-    } else if (type === 'SECRET') {
-      if (secretRef.current) {
-        secretRef.current.select();
-        secretRef.current.setSelectionRange(0, 99999);
-
-        navigator.clipboard
-          .writeText(secretRef.current.value)
-          .then(() => {
-            message.error('Berhasil salin ke clipboard');
-          })
-          .catch(() => {
-            message.error('Gagal salin ke clipboard');
-          });
-      }
+      await navigator.clipboard.writeText(val);
+      message.success('Berhasil salin ke clipboard');
+    } catch (error) {
+      message.error('Gagal salin ke clipboard');
     }
   };
 
@@ -124,12 +117,14 @@ const FormSupplier = () => {
     if (updateData) {
       form.setFieldsValue({
         name: updateData.name,
+        host: updateData.host,
         secret_key: updateData.secret_key,
         public_key: updateData.public_key,
         callbackIP: updateData.callbackIP,
       });
     }
   }, [updateData]);
+
   return (
     <>
       <HeadCustom
@@ -175,7 +170,7 @@ const FormSupplier = () => {
                 },
               ]}
             >
-              <Input.TextArea readOnly={false} ref={secretRef} />
+              <Input.TextArea readOnly={true} ref={secretRef} />
             </Form.Item>
 
             <Space>
@@ -206,7 +201,7 @@ const FormSupplier = () => {
                 },
               ]}
             >
-              <Input.TextArea readOnly={false} ref={publicRef} />
+              <Input.TextArea readOnly={true} ref={publicRef} />
             </Form.Item>
 
             <Space>
@@ -226,6 +221,29 @@ const FormSupplier = () => {
             <Typography.Title level={5}>IP Server</Typography.Title>
             <p className="mb-3">IP Server untuk memvalidasi sistem</p>
             <Form.Item
+              name="host"
+              className="w-full"
+              rules={[
+                {
+                  required: true,
+                  message: 'IP Server tidak boleh kosong!',
+                },
+                {
+                  validator: validateHost,
+                },
+              ]}
+            >
+              <Input
+                max={255}
+                placeholder="Contoh: https://example.com atau 192.168.1.1"
+              />
+            </Form.Item>
+          </Card>
+
+          <Card>
+            <Typography.Title level={5}>IP Whitelist</Typography.Title>
+            <p className="mb-3">IP Whitelist server</p>
+            <Form.Item
               name="callbackIP"
               className="w-full"
               rules={[
@@ -234,7 +252,7 @@ const FormSupplier = () => {
                   message: 'IP Server tidak boleh kosong!',
                 },
                 {
-                  validator: validateIpAddress,
+                  validator: validateIp,
                 },
               ]}
             >

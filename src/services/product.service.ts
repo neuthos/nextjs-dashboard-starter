@@ -1,5 +1,7 @@
 /* eslint-disable func-names */
 
+import { message } from 'antd';
+
 import objectToQueryString from '@/functions/objectToQueryString';
 
 import ApiInstance from './index.instance';
@@ -28,10 +30,91 @@ const ProductService = (function () {
 
   const productList = async (param: any) => {
     const query = objectToQueryString(param);
-    const path = `/products?${query}`;
+    const path = `/product-companies?${query}`;
 
     const response = await ApiInstance.get({ path });
     if (response.success) return response.data;
+    return null;
+  };
+
+  const updateStatus = async (payload: {
+    status: string;
+    productCompanyIds: string[];
+  }) => {
+    const path = `/product-companies/update-status`;
+
+    const response = await ApiInstance.patch({ path, body: payload });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
+  const updateMargin = async (payload: {
+    margin: string;
+    productCompanyIds: string[];
+  }) => {
+    const path = `/product-companies/update-margin`;
+
+    const response = await ApiInstance.patch({ path, body: payload });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
+  const updateMarginByCategory = async (payload: {
+    categoryId: string;
+    margin: string;
+  }) => {
+    const path = `/product-companies/update-margin-by-category/${payload.categoryId}`;
+
+    const response = await ApiInstance.patch({
+      path,
+      body: {
+        margin: payload.margin,
+      },
+    });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
+  const updateMarginByBrand = async (payload: {
+    brandId: string;
+    margin: string;
+  }) => {
+    const path = `/product-companies/update-margin-by-brand/${payload.brandId}`;
+
+    const response = await ApiInstance.patch({
+      path,
+      body: {
+        margin: payload.margin,
+      },
+    });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
+  const updateSupplier = async (payload: {
+    supplierId: string;
+    buyPrice: number;
+    productCompanyIds: string[];
+  }) => {
+    const path = `/product-companies/update-supplier`;
+
+    const response = await ApiInstance.patch({ path, body: payload });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
     return null;
   };
 
@@ -40,6 +123,11 @@ const ProductService = (function () {
     productCategoriesList,
     productBrandList,
     productList,
+    updateStatus,
+    updateMargin,
+    updateMarginByCategory,
+    updateSupplier,
+    updateMarginByBrand,
   };
 })();
 

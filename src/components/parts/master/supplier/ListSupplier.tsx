@@ -66,7 +66,7 @@ const ListSupplier = () => {
   ];
 
   const { data: suppliers, isLoading } = useQuery({
-    queryKey: [SupplierService.Queries.LIST_SUPPLIER, page],
+    queryKey: [SupplierService.Queries.LIST_SUPPLIER, page, nameSearch],
     queryFn: () => SupplierService.list({ page, limit: 10, name: nameSearch }),
   });
 

@@ -18,6 +18,7 @@ module.exports = {
     NEXT_PUBLIC_SICS_MEMBER: process.env.NEXT_PUBLIC_SICS_MEMBER,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_PRODUCT_NAME: process.env.NEXT_PUBLIC_PRODUCT_NAME,
+    NEXT_PUBLIC_QPAY_UUID: process.env.NEXT_PUBLIC_QPAY_UUID,
   },
   serverRuntimeConfig: {
     OIDC_ISSUER: process.env.OIDC_ISSUER,

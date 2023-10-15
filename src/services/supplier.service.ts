@@ -9,6 +9,7 @@ import ApiInstance from './index.instance';
 const SupplierService = (function () {
   const Queries = {
     LIST_SUPPLIER: 'LIST_SUPPLIER',
+    FEE: 'FEE',
   };
 
   const list = async (param: any) => {
@@ -55,12 +56,21 @@ const SupplierService = (function () {
     return null;
   };
 
+  const getFee = async () => {
+    const path = `/company/fee`;
+
+    const response = await ApiInstance.get({ path });
+    if (response.success) return response.data;
+    return null;
+  };
+
   return {
     Queries,
 
     list,
     create,
     update,
+    getFee,
   };
 })();
 

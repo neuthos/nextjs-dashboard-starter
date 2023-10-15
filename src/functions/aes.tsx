@@ -27,7 +27,7 @@ export function decryptAES256(
 }
 
 export function generateRandomKey64Bit() {
-  const randomBytes = CryptoJS.lib.WordArray.random(64);
+  const randomBytes = CryptoJS.lib.WordArray.random(32);
   const randomHex = randomBytes.toString(CryptoJS.enc.Hex);
 
   return randomHex;
