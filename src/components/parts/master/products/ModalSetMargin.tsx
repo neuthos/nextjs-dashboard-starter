@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Form, message, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 
+import LabelComponent from '@/components/reuse/LabelComponent';
 import NumberInput from '@/components/reuse/NumberInput';
 import ProductService from '@/services/product.service';
 
@@ -69,18 +70,23 @@ const ModalSetMargin = (param: {
         footer={null}
       >
         <Form form={form} onFinish={handleSubmit} className="space-y-5 py-6">
-          <Form.Item
-            name="margin"
-            className="w-full"
-            rules={[
-              {
-                required: true,
-                message: 'Margin tidak boleh kosong!',
-              },
-            ]}
-          >
-            <NumberInput className="w-full" placeholder="0" />
-          </Form.Item>
+          <LabelComponent
+            label={'Margin'}
+            component={
+              <Form.Item
+                name="margin"
+                className="w-full"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Margin tidak boleh kosong!',
+                  },
+                ]}
+              >
+                <NumberInput className="w-full" placeholder="0" />
+              </Form.Item>
+            }
+          />
 
           <Form.Item>
             <div className="flex items-center justify-center gap-x-2">

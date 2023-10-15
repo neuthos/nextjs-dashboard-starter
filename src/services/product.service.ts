@@ -103,6 +103,22 @@ const ProductService = (function () {
     return null;
   };
 
+  const updateMarginAllProducts = async (payload: { margin: string }) => {
+    const path = `/product-companies/update-margin/all`;
+
+    const response = await ApiInstance.patch({
+      path,
+      body: {
+        margin: payload.margin,
+      },
+    });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
   const updateSupplier = async (payload: {
     supplierId: string;
     buyPrice: number;
@@ -111,6 +127,22 @@ const ProductService = (function () {
     const path = `/product-companies/update-supplier`;
 
     const response = await ApiInstance.patch({ path, body: payload });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
+  const updateDefaultMargin = async (payload: { defaultMargin: number }) => {
+    const path = `/company/default-margin`;
+
+    const response = await ApiInstance.patch({
+      path,
+      body: {
+        defaultMargin: payload.defaultMargin,
+      },
+    });
 
     if (response.success) return response;
 
@@ -128,6 +160,8 @@ const ProductService = (function () {
     updateMarginByCategory,
     updateSupplier,
     updateMarginByBrand,
+    updateMarginAllProducts,
+    updateDefaultMargin,
   };
 })();
 

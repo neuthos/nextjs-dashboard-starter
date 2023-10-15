@@ -71,8 +71,8 @@ const useSidenavStore = create<SidenavState>()((set) => ({
           idetifier: 'temp',
         }),
         generateNavItem({
-          label: 'Affiliate Saya',
-          key: '/sales-marketing/affiliate',
+          label: 'Pengaturan',
+          key: '/sales-marketing/setting',
           idetifier: 'temp',
         }),
       ],
