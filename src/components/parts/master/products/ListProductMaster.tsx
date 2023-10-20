@@ -102,7 +102,6 @@ const ListProductMaster = () => {
           onSearch: setNameSearch,
         }),
         render: (_: any, record: any) => {
-          console.log({ record });
           return (
             <Space align="center" content="center">
               <Image
