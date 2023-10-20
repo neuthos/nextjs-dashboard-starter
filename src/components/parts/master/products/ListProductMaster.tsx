@@ -15,6 +15,7 @@ import {
   Tag,
 } from 'antd';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import router from 'next/router';
 import { useState } from 'react';
 
@@ -101,7 +102,18 @@ const ListProductMaster = () => {
           onSearch: setNameSearch,
         }),
         render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.name || '-'}</>;
+          console.log({ record });
+          return (
+            <Space align="center" content="center">
+              <Image
+                src="https://irmastore.sgp1.digitaloceanspaces.com/1697783586072_jpeg"
+                alt="telkomsel"
+                width={25}
+                height={25}
+              />
+              <p>{record?.product_digital_master?.name || '-'}</p>
+            </Space>
+          );
         },
       },
       {
