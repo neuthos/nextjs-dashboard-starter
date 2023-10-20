@@ -6,6 +6,7 @@ interface CustomSwitchProps {
   checked?: boolean;
   onChange?: any;
   disabled?: boolean;
+  noCheckFirst?: boolean;
 }
 
 const SwitchCustom = ({
@@ -13,11 +14,14 @@ const SwitchCustom = ({
   checked = false,
   onChange = console.log,
   disabled = false,
+  noCheckFirst = true,
 }: CustomSwitchProps) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const switchCheck = () => {
-    setIsChecked(!isChecked);
+    if (!noCheckFirst) {
+      setIsChecked(!isChecked);
+    }
     onChange(!isChecked);
   };
 

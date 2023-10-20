@@ -9,12 +9,21 @@ import ApiInstance from './index.instance';
 const SupplierService = (function () {
   const Queries = {
     LIST_SUPPLIER: 'LIST_SUPPLIER',
+    LIST_SUPPLIER_DEFAULT: 'LIST_SUPPLIER_DEFAULT',
     FEE: 'FEE',
   };
 
   const list = async (param: any) => {
     const query = objectToQueryString(param);
     const path = `/suppliers?${query}`;
+
+    const response = await ApiInstance.get({ path });
+    if (response.success) return response.data;
+    return null;
+  };
+
+  const listDefault = async () => {
+    const path = `/suppliers/default`;
 
     const response = await ApiInstance.get({ path });
     if (response.success) return response.data;
@@ -64,13 +73,31 @@ const SupplierService = (function () {
     return null;
   };
 
+  const updateStatus = async (payload: {
+    uuid: string;
+    body: {
+      status: number;
+    };
+  }) => {
+    const path = `/suppliers/update-status/${payload.uuid}`;
+
+    const response = await ApiInstance.patch({ path, body: payload.body });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
   return {
     Queries,
 
     list,
+    listDefault,
     create,
     update,
     getFee,
+    updateStatus,
   };
 })();
 
