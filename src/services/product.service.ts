@@ -30,7 +30,7 @@ const ProductService = (function () {
 
   const productList = async (param: any) => {
     const query = objectToQueryString(param);
-    const path = `/product-companies?${query}`;
+    const path = `/products?${query}`;
 
     const response = await ApiInstance.get({ path });
     if (response.success) return response.data;
@@ -38,12 +38,23 @@ const ProductService = (function () {
   };
 
   const updateStatus = async (payload: {
-    status: string;
+    status: number;
     productCompanyIds: string[];
   }) => {
     const path = `/product-companies/update-status`;
 
     const response = await ApiInstance.patch({ path, body: payload });
+
+    if (response.success) return response;
+
+    message.error(response?.msg || 'Internal Server Error');
+    return null;
+  };
+
+  const syncProduct = async () => {
+    const path = `/product-companies/sync-product`;
+
+    const response = await ApiInstance.patch({ path });
 
     if (response.success) return response;
 
@@ -162,6 +173,7 @@ const ProductService = (function () {
     updateMarginByBrand,
     updateMarginAllProducts,
     updateDefaultMargin,
+    syncProduct,
   };
 })();
 

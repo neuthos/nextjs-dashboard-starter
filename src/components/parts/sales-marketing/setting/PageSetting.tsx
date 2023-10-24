@@ -1,5 +1,5 @@
 import { RightOutlined } from '@ant-design/icons';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -13,18 +13,28 @@ import {
   Typography,
 } from 'antd';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { HeadCustom } from '@/components/reuse/header.reuse';
 import LabelComponent from '@/components/reuse/LabelComponent';
 import NumberInput from '@/components/reuse/NumberInput';
+import { useAuthorizationContext } from '@/functions/AuthorizationContexts';
 import ProductService from '@/services/product.service';
+import SupplierService from '@/services/supplier.service';
 
 const PageSetting = () => {
+  const queryClient = useQueryClient();
   const [form] = Form.useForm();
+  const session = useAuthorizationContext();
+
   const [cardSelected, setCardSelected] = useState<'ALL' | 'DEFAULT' | null>(
     null
   );
+  const { data: company } = useQuery({
+    queryKey: [SupplierService.Queries.DETAIL, session.user.koperasi_guid],
+    queryFn: () => SupplierService.getDetailCompany(session.user.koperasi_guid),
+    enabled: !!session.user.koperasi_guid,
+  });
 
   const { mutate: updateAllMargin, isLoading: loadingAllMargin } = useMutation(
     ProductService.updateMarginAllProducts,
@@ -43,19 +53,20 @@ const PageSetting = () => {
       onSuccess: (res: any) => {
         if (res && res.success) {
           message.success(res.data);
-          form.resetFields();
+          setCardSelected(null);
+          queryClient.invalidateQueries([SupplierService.Queries.DETAIL]);
         }
       },
     });
 
   const handleSubmit = () => {
-    const margin = form.getFieldValue('margin');
-
     if (cardSelected === 'ALL') {
+      const margin = form.getFieldValue('ALL_margin');
       updateAllMargin({
         margin,
       });
     } else if (cardSelected === 'DEFAULT') {
+      const margin = form.getFieldValue('DEFAULT_margin');
       updateDefaultMargin({
         defaultMargin: margin,
       });
@@ -98,6 +109,13 @@ const PageSetting = () => {
 
     form.resetFields();
   };
+
+  useEffect(() => {
+    if (company && cardSelected === 'DEFAULT') {
+      console.log({ company });
+      form.setFieldValue('DEFAULT_margin', +company.default_fee);
+    }
+  }, [company, cardSelected]);
 
   return (
     <>
@@ -166,7 +184,7 @@ const PageSetting = () => {
                     label={'Margin'}
                     component={
                       <Form.Item
-                        name="margin"
+                        name={`${cardSelected}_margin`}
                         className="w-full"
                         rules={[
                           {

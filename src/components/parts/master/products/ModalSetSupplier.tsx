@@ -38,11 +38,13 @@ const ModalSetSupplier = (param: {
   });
 
   const { data: suppliers, isLoading } = useQuery({
-    queryKey: [SupplierService.Queries.LIST_SUPPLIER],
-    queryFn: () => SupplierService.list({ page: 1, limit: 99999, status: 1 }),
+    queryKey: [SupplierService.Queries.LIST_SUPPLIER, 'all'],
+    queryFn: () =>
+      SupplierService.list({ page: 1, limit: 99999, status: 1, type: 'all' }),
     enabled: isModalOpen,
   });
 
+  console.log({ suppliers });
   const { mutate: updateSupplier, isLoading: loadingUpdateMargin } =
     useMutation(ProductService.updateSupplier, {
       onSuccess: (res) => {
@@ -59,7 +61,7 @@ const ModalSetSupplier = (param: {
     const formData = form.getFieldsValue();
     updateSupplier({
       supplierId: formData.supplier_id,
-      productCompanyIds: [param.data?.uuid],
+      productCompanyIds: [param.data?.product_companies?.uuid],
       buyPrice: formData.buy_price,
     });
   };
@@ -75,10 +77,7 @@ const ModalSetSupplier = (param: {
 
   useEffect(() => {
     if (isQpay) {
-      form.setFieldValue(
-        'buy_price',
-        +param?.data?.product_digital_master?.buy_price
-      );
+      form.setFieldValue('buy_price', +param?.data?.buy_price);
     }
   }, [isQpay]);
 

@@ -38,6 +38,7 @@ module.exports = {
       'api.dicebear.com',
       'source.unsplash.com',
       'irmastore.sgp1.digitaloceanspaces.com',
+      'hay-images.sgp1.digitaloceanspaces.com',
     ],
   },
   webpack(config, options) {

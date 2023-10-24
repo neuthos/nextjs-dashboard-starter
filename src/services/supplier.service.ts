@@ -11,6 +11,7 @@ const SupplierService = (function () {
     LIST_SUPPLIER: 'LIST_SUPPLIER',
     LIST_SUPPLIER_DEFAULT: 'LIST_SUPPLIER_DEFAULT',
     FEE: 'FEE',
+    DETAIL: 'DETAIL',
   };
 
   const list = async (param: any) => {
@@ -73,6 +74,14 @@ const SupplierService = (function () {
     return null;
   };
 
+  const getDetailCompany = async (companyId: string) => {
+    const path = `/company/${companyId}`;
+
+    const response = await ApiInstance.get({ path });
+    if (response.success) return response.data;
+    return null;
+  };
+
   const updateStatus = async (payload: {
     uuid: string;
     body: {
@@ -98,6 +107,7 @@ const SupplierService = (function () {
     update,
     getFee,
     updateStatus,
+    getDetailCompany,
   };
 })();
 

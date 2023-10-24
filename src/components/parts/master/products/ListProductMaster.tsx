@@ -53,7 +53,7 @@ const ListProductMaster = () => {
   const [brands, setBrands] = useState([{ value: null, label: 'Semua' }]);
 
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit, setLimit] = useState(10);
 
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState<any>('0');
@@ -79,13 +79,29 @@ const ListProductMaster = () => {
     }
   );
 
+  const { mutate: syncProduct, isLoading: loadingSyncProduct } = useMutation(
+    ProductService.syncProduct,
+    {
+      onSuccess: (res) => {
+        if (res) {
+          setSelectedProducts([]);
+          queryClient.invalidateQueries([ProductService.Queries.PRODUCTS]);
+          message.success(res.data);
+        }
+      },
+    }
+  );
+
   const columnType: any = {
     '0': [
       {
         title: 'Status',
         dataIndex: 'status',
         render: (_: any, record: any) => {
-          const isAktif = record.status === '1';
+          const isAktif = record.product_companies
+            ? record.product_companies.status === 1
+            : false;
+
           const data = {
             tagColor: isAktif ? 'green' : 'red',
             label: isAktif ? 'Aktif' : 'Tidak aktif',
@@ -94,7 +110,7 @@ const ListProductMaster = () => {
         },
       },
       {
-        title: 'Nama',
+        title: 'Produk',
         dataIndex: 'name',
         ...getColumnSearchProps({
           dataIndex: 'name',
@@ -105,12 +121,13 @@ const ListProductMaster = () => {
           return (
             <Space align="center" content="center">
               <Image
-                src="https://irmastore.sgp1.digitaloceanspaces.com/1697783586072_jpeg"
+                className="rounded-[8px]"
+                src={record?.product_digital_brand?.icon}
                 alt="telkomsel"
                 width={25}
                 height={25}
               />
-              <p>{record?.product_digital_master?.name || '-'}</p>
+              <p className="text-[12px]">{record?.name || '-'}</p>
             </Space>
           );
         },
@@ -123,48 +140,39 @@ const ListProductMaster = () => {
           placeholder: 'Kode produk',
           onSearch: setProductCodeSearch,
         }),
-        render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.product_code || '-'}</>;
-        },
       },
       {
         title: 'Deksripsi',
         dataIndex: 'description',
-        render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.description || '-'}</>;
-        },
       },
       {
         title: 'Denom',
         dataIndex: 'denom',
-        render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.denom || '-'}</>;
-        },
       },
       {
         title: 'Kode Supplier',
         dataIndex: 'supplier_code',
-        render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.supplier_code || '-'}</>;
-        },
       },
       {
         title: 'Supplier',
         dataIndex: 'supplier',
         render: (_: any, record: any) => {
-          return <>{record?.supplier?.name || '-'}</>;
+          return <>{record?.product_companies?.supplier?.name || '-'}</>;
         },
       },
       {
         title: 'Harga beli',
         dataIndex: 'buy_price',
         render: (_: string, record: any) => {
+          if (!record.product_companies) return '-';
+
           const isQpay =
-            record?.supplier_id === process.env.NEXT_PUBLIC_QPAY_UUID;
+            record.product_companies?.supplier_id ===
+            process.env.NEXT_PUBLIC_QPAY_UUID;
 
           const buyPrice = isQpay
-            ? +record?.product_digital_master?.buy_price
-            : record?.buy_price;
+            ? +record?.buy_price
+            : +record?.product_companies?.buy_price;
 
           return formatRupiah(+buyPrice);
         },
@@ -173,8 +181,7 @@ const ListProductMaster = () => {
         title: 'Margin',
         dataIndex: 'margin',
         render: (_: any, record: any) => {
-          // eslint-disable-next-line no-unsafe-optional-chaining
-          const margin = +record?.margin || 0;
+          const margin = +record.product_companies?.margin || 0;
           return formatRupiah(margin);
         },
       },
@@ -183,13 +190,14 @@ const ListProductMaster = () => {
         dataIndex: 'sell_price',
         render: (_: any, record: any) => {
           const isQpay =
-            record?.supplier_id === process.env.NEXT_PUBLIC_QPAY_UUID;
+            record?.product_companies?.supplier_id ===
+            process.env.NEXT_PUBLIC_QPAY_UUID;
 
           const buyPrice = isQpay
-            ? +record?.product_digital_master?.buy_price
-            : +record?.buy_price;
+            ? +record?.buy_price
+            : +record?.product_companies?.buy_price || 0;
 
-          const margin = +record?.margin || 0;
+          const margin = +record?.product_companies?.margin || 0;
 
           return formatRupiah(buyPrice + margin);
         },
@@ -199,89 +207,99 @@ const ListProductMaster = () => {
         title: 'Aksi',
         dataIndex: 'action',
         render: (_: any, record: any) => {
-          const isAktif = record?.status === '1';
+          const isAktif =
+            (record?.product_companies &&
+              record?.product_companies?.status === 1) ||
+            false;
           return (
             <>
-              {isAktif ? (
-                <Button
-                  size="small"
-                  danger
-                  onClick={() => {
-                    modal.confirm({
-                      title: 'Nonaktifkan produk?',
-                      content: (
-                        <>
-                          <p>
-                            Jika anda menonaktifkan produk maka produk tidak
-                            akan muncul di Kasir maupun aplikasi
-                          </p>
-                        </>
-                      ),
-                      onOk() {
-                        updateStatus({
-                          status: '0',
-                          productCompanyIds: [record.uuid],
+              {record?.product_companies && (
+                <>
+                  {isAktif ? (
+                    <Button
+                      size="small"
+                      danger
+                      onClick={() => {
+                        modal.confirm({
+                          title: 'Nonaktifkan produk?',
+                          content: (
+                            <>
+                              <p>
+                                Jika anda menonaktifkan produk maka produk tidak
+                                akan muncul di Kasir maupun aplikasi
+                              </p>
+                            </>
+                          ),
+                          onOk() {
+                            updateStatus({
+                              status: 0,
+                              productCompanyIds: [
+                                record?.product_companies?.uuid,
+                              ],
+                            });
+                          },
                         });
-                      },
-                    });
-                  }}
-                >
-                  Nonaktifkan
-                </Button>
-              ) : (
-                <Button
-                  size="small"
-                  onClick={() => {
-                    modal.confirm({
-                      title: 'Nonaktifkan produk?',
-                      content: (
-                        <>
-                          <p>
-                            Jika anda mengaktifkan produk maka produk akan
-                            muncul di Kasir maupun aplikasi
-                          </p>
-                        </>
-                      ),
-                      onOk() {
-                        updateStatus({
-                          status: '1',
-                          productCompanyIds: [record.uuid],
+                      }}
+                    >
+                      Nonaktifkan
+                    </Button>
+                  ) : (
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        modal.confirm({
+                          title: 'Nonaktifkan produk?',
+                          content: (
+                            <>
+                              <p>
+                                Jika anda mengaktifkan produk maka produk akan
+                                muncul di Kasir maupun aplikasi
+                              </p>
+                            </>
+                          ),
+                          onOk() {
+                            updateStatus({
+                              status: 1,
+                              productCompanyIds: [
+                                record?.product_companies?.uuid,
+                              ],
+                            });
+                          },
                         });
-                      },
-                    });
-                  }}
-                  className="text-green-600"
-                >
-                  Aktifkan
-                </Button>
+                      }}
+                      className="text-green-600"
+                    >
+                      Aktifkan
+                    </Button>
+                  )}
+                  <Popover
+                    placement="bottom"
+                    content={
+                      <>
+                        <div className="w-[120px]">
+                          <ModalSetMargin
+                            buttonType="link"
+                            disabled={false}
+                            data={record}
+                            productIds={[record?.uuid]}
+                            setSelectedProducts={setSelectedProducts}
+                          />
+                          <ModalSetSupplier
+                            buttonType="link"
+                            disabled={false}
+                            data={record}
+                            productIds={[record?.uuid]}
+                            setSelectedProducts={setSelectedProducts}
+                          />
+                        </div>
+                      </>
+                    }
+                    trigger="click"
+                  >
+                    <Button type="link">More</Button>
+                  </Popover>
+                </>
               )}
-
-              <Popover
-                placement="bottom"
-                content={
-                  <>
-                    <div className="w-[120px]">
-                      <ModalSetMargin
-                        buttonType="link"
-                        disabled={false}
-                        data={record}
-                        productIds={[record?.uuid]}
-                        setSelectedProducts={setSelectedProducts}
-                      />
-                      <ModalSetSupplier
-                        buttonType="link"
-                        disabled={false}
-                        data={record}
-                        productIds={[record?.uuid]}
-                        setSelectedProducts={setSelectedProducts}
-                      />
-                    </div>
-                  </>
-                }
-                trigger="click"
-              >
-                <Button type="link">More</Button>
-              </Popover>
             </>
           );
         },
@@ -378,8 +396,8 @@ const ListProductMaster = () => {
                       ),
                       onOk() {
                         updateStatus({
-                          status: '0',
-                          productCompanyIds: [record.uuid],
+                          status: 0,
+                          productCompanyIds: [record?.product_companies?.uuid],
                         });
                       },
                     });
@@ -403,8 +421,8 @@ const ListProductMaster = () => {
                       ),
                       onOk() {
                         updateStatus({
-                          status: '1',
-                          productCompanyIds: [record.uuid],
+                          status: 1,
+                          productCompanyIds: [record?.product_companies?.uuid],
                         });
                       },
                     });
@@ -517,8 +535,10 @@ const ListProductMaster = () => {
         ),
         onOk() {
           updateStatus({
-            status: '1',
-            productCompanyIds: selectedProducts.map((el) => el?.uuid || ''),
+            status: 1,
+            productCompanyIds: selectedProducts.map(
+              (el) => el?.product_companies?.uuid || ''
+            ),
           });
           setSelectedProducts([]);
         },
@@ -536,8 +556,10 @@ const ListProductMaster = () => {
         ),
         onOk() {
           updateStatus({
-            status: '0',
-            productCompanyIds: selectedProducts.map((el) => el?.uuid || ''),
+            status: 0,
+            productCompanyIds: selectedProducts.map(
+              (el) => el?.product_companies?.uuid || ''
+            ),
           });
           setSelectedProducts([]);
         },
@@ -545,9 +567,26 @@ const ListProductMaster = () => {
     }
   };
 
+  const syncProductModal = () => {
+    modal.confirm({
+      title: `Sinkronisasi produk?`,
+      content: (
+        <>
+          <p>
+            Jika anda anda melakukan sinkronisasi, maka semua produk yang belum
+            terdaftar akan secara otomatis didaftarkan ke supplier default
+          </p>
+        </>
+      ),
+      onOk() {
+        syncProduct();
+        setSelectedProducts([]);
+      },
+    });
+  };
+
   const rowSelection = {
     onChange: (_: any, selectedRows: any[]) => {
-      // console.log(`selectedRowKeys: ${selectedRowKeys}`);
       setSelectedProducts(selectedRows);
     },
     getCheckboxProps: (record: any) => ({
@@ -555,6 +594,8 @@ const ListProductMaster = () => {
       name: record.name,
     }),
   };
+
+  console.log(productCompanies);
 
   return (
     <>
@@ -651,6 +692,9 @@ const ListProductMaster = () => {
         </Card>
 
         <Space wrap className=" mt-4">
+          <Button onClick={() => syncProductModal()}>
+            Sinkronisasi produk
+          </Button>
           <Button
             onClick={() => bulkUpdateStatus(true)}
             disabled={disableBulkButton}
@@ -681,12 +725,19 @@ const ListProductMaster = () => {
             ...rowSelection,
           }}
           dataSource={productCompanies?.content || []}
-          loading={productCompaniesLoading || loadingUpdateStatus}
+          loading={
+            productCompaniesLoading || loadingUpdateStatus || loadingSyncProduct
+          }
           pagination={{
             current: page,
             pageSize: limit,
-            total: productCompanies ? productCompanies.totalItems : 0,
-            onChange: setPage,
+            total: productCompanies
+              ? productCompanies?.pagination?.totalItems
+              : 0,
+            onChange: (p, l) => {
+              setPage(p);
+              setLimit(l);
+            },
           }}
         />
       </div>
