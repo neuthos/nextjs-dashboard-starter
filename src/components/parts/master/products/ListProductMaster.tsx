@@ -595,8 +595,6 @@ const ListProductMaster = () => {
     }),
   };
 
-  console.log(productCompanies);
-
   return (
     <>
       {contextHolder}
