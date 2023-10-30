@@ -50,7 +50,7 @@ const ModalSetMargin = (param: {
 
   useEffect(() => {
     if (param?.data) {
-      form.setFieldValue('margin', param.data.margin);
+      form.setFieldValue('margin', param.data?.product_companies?.margin);
     }
   }, [param?.data]);
 

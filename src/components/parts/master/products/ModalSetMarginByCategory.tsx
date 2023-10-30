@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Form, message, Modal, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import LabelComponent from '@/components/reuse/LabelComponent';
 import NumberInput from '@/components/reuse/NumberInput';
@@ -8,7 +8,6 @@ import ProductService from '@/services/product.service';
 
 const ModalSetMarginByCategory = (param: {
   disabled: boolean;
-  data: any;
   productIds: string[];
   setSelectedProducts: (param: any) => void;
   buttonType: 'link' | 'default';
@@ -52,12 +51,6 @@ const ModalSetMarginByCategory = (param: {
       categoryId,
     });
   };
-
-  useEffect(() => {
-    if (param?.data) {
-      form.setFieldValue('margin', param.data.margin);
-    }
-  }, [param?.data]);
 
   return (
     <>

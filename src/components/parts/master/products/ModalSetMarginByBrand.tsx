@@ -8,7 +8,6 @@ import ProductService from '@/services/product.service';
 
 const ModalSetMarginByBrand = (param: {
   disabled: boolean;
-  data: any;
   productIds: string[];
   setSelectedProducts: (param: any) => void;
   buttonType: 'link' | 'default';
@@ -61,12 +60,6 @@ const ModalSetMarginByBrand = (param: {
       brandId,
     });
   };
-
-  useEffect(() => {
-    if (param?.data) {
-      form.setFieldValue('margin', param.data.margin);
-    }
-  }, [param?.data]);
 
   useEffect(() => {
     form.setFieldValue('product_brand_id', undefined);

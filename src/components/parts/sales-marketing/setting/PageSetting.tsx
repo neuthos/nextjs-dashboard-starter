@@ -12,20 +12,29 @@ import {
   Table,
   Typography,
 } from 'antd';
+import dayjs from 'dayjs';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
 import { HeadCustom } from '@/components/reuse/header.reuse';
 import LabelComponent from '@/components/reuse/LabelComponent';
 import NumberInput from '@/components/reuse/NumberInput';
+import routeState from '@/components/reuse/StateRouteHandler';
 import { useAuthorizationContext } from '@/functions/AuthorizationContexts';
+import { formatToStringDateTimezone } from '@/functions/date';
 import ProductService from '@/services/product.service';
 import SupplierService from '@/services/supplier.service';
+import TransactionService from '@/services/transaction.service';
 
 const PageSetting = () => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const session = useAuthorizationContext();
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [reffNumber, setReffNumber] = useState('');
+  const [filterDate, setFilterDate] = useState<any>([dayjs(), dayjs()]);
 
   const [cardSelected, setCardSelected] = useState<'ALL' | 'DEFAULT' | null>(
     null
@@ -59,6 +68,31 @@ const PageSetting = () => {
       },
     });
 
+  const { data: trx, isLoading: loadingTrx } = useQuery({
+    queryKey: [
+      TransactionService.Queries.LIST_TRANSACTION,
+      page,
+      limit,
+      reffNumber,
+      filterDate[0]?.format('DD MM YYYY'),
+      filterDate[1]?.format('DD MM YYYY'),
+    ],
+    queryFn: () =>
+      TransactionService.list({
+        page,
+        limit,
+        refference_number: reffNumber,
+        start_date: formatToStringDateTimezone(
+          filterDate[0]?.startOf('day')?.toISOString()
+        ),
+        end_date: formatToStringDateTimezone(
+          filterDate[1]?.endOf('day')?.toISOString()
+        ),
+        show_log: true,
+      }),
+  });
+  console.log(trx);
+
   const handleSubmit = () => {
     if (cardSelected === 'ALL') {
       const margin = form.getFieldValue('ALL_margin');
@@ -77,24 +111,35 @@ const PageSetting = () => {
 
   const columns = [
     {
-      title: 'Waktu',
+      title: 'Tanggal',
       dataIndex: 'created_at',
+      render: (_: any) => {
+        return <>{dayjs().format('DD MMM YYYY, HH:mm:ss')} WIB</>;
+      },
     },
     {
-      title: 'ID Transaksi',
-      dataIndex: 'trx_id',
+      title: 'Invoice',
+      dataIndex: 'reference_number',
+      render: (text: string) => text || '-',
     },
     {
-      title: 'Request Log',
-      dataIndex: 'log_request',
-    },
-    {
-      title: 'Response Log',
-      dataIndex: 'log_response',
-    },
-    {
-      title: 'Status',
+      title: 'Detail',
       dataIndex: 'status',
+      render: (_: any, record: any) => {
+        return (
+          <Button
+            type="link"
+            onClick={() => {
+              routeState({
+                page: 'log-history-detail',
+                data: record,
+              });
+            }}
+          >
+            Detail
+          </Button>
+        );
+      },
     },
   ];
 
@@ -112,7 +157,6 @@ const PageSetting = () => {
 
   useEffect(() => {
     if (company && cardSelected === 'DEFAULT') {
-      console.log({ company });
       form.setFieldValue('DEFAULT_margin', +company.default_fee);
     }
   }, [company, cardSelected]);
@@ -232,6 +276,7 @@ const PageSetting = () => {
                   label={'Cari berdasar ID Transaksi'}
                   component={
                     <Input.Search
+                      onSearch={setReffNumber}
                       className="w-[225px]"
                       placeholder="Cth: Trx.."
                     />
@@ -239,7 +284,12 @@ const PageSetting = () => {
                 />
               </div>
               <div>
-                <DatePicker.RangePicker className="h-[44px]" />
+                <DatePicker.RangePicker
+                  allowClear={false}
+                  value={filterDate}
+                  onChange={(val: any) => setFilterDate(val)}
+                  className="h-[42px] w-[225px]"
+                />
               </div>
             </div>
 
@@ -247,13 +297,16 @@ const PageSetting = () => {
               rowKey={'uuid'}
               className="mt-3"
               columns={columns}
-              dataSource={[{}]}
-              loading={false}
+              dataSource={trx?.content || []}
+              loading={loadingTrx}
               pagination={{
-                current: 1,
-                pageSize: 10,
-                total: 10,
-                // onChange: setPage,
+                current: page,
+                pageSize: limit,
+                total: trx ? trx.pagination.totalItems : 0,
+                onChange: (el: number, sizeNew: number) => {
+                  setPage(el);
+                  setLimit(sizeNew);
+                },
               }}
             />
           </Card>

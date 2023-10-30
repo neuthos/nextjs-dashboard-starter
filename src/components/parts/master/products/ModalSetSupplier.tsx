@@ -44,7 +44,6 @@ const ModalSetSupplier = (param: {
     enabled: isModalOpen,
   });
 
-  console.log({ suppliers });
   const { mutate: updateSupplier, isLoading: loadingUpdateMargin } =
     useMutation(ProductService.updateSupplier, {
       onSuccess: (res) => {
@@ -68,9 +67,12 @@ const ModalSetSupplier = (param: {
 
   useEffect(() => {
     if (param?.data) {
-      const supplierIdData = param.data.supplier_id;
+      const supplierIdData = param.data?.product_companies?.supplier_id;
       form.setFieldValue('supplier_id', supplierIdData);
-      form.setFieldValue('buy_price', +param.data.buy_price);
+      form.setFieldValue(
+        'buy_price',
+        +param.data?.product_companies?.buy_price
+      );
       setSelectedSupplierId(supplierIdData);
     }
   }, [param?.data]);

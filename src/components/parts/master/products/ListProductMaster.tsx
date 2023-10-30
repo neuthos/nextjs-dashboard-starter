@@ -281,14 +281,14 @@ const ListProductMaster = () => {
                             buttonType="link"
                             disabled={false}
                             data={record}
-                            productIds={[record?.uuid]}
+                            productIds={[record?.product_companies?.uuid]}
                             setSelectedProducts={setSelectedProducts}
                           />
                           <ModalSetSupplier
                             buttonType="link"
                             disabled={false}
                             data={record}
-                            productIds={[record?.uuid]}
+                            productIds={[record?.product_companies?.uuid]}
                             setSelectedProducts={setSelectedProducts}
                           />
                         </div>
@@ -310,7 +310,7 @@ const ListProductMaster = () => {
         title: 'Status',
         dataIndex: 'status',
         render: (_: any, record: any) => {
-          const isAktif = record.status === '1';
+          const isAktif = record?.product_companies.status === 1;
           const data = {
             tagColor: isAktif ? 'green' : 'red',
             label: isAktif ? 'Aktif' : 'Tidak aktif',
@@ -327,7 +327,7 @@ const ListProductMaster = () => {
           onSearch: setNameSearch,
         }),
         render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.name || '-'}</>;
+          return <>{record?.name || '-'}</>;
         },
       },
       {
@@ -339,35 +339,35 @@ const ListProductMaster = () => {
           onSearch: setProductCodeSearch,
         }),
         render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.product_code || '-'}</>;
+          return <>{record?.product_code || '-'}</>;
         },
       },
       {
         title: 'Deksripsi',
         dataIndex: 'description',
         render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.description || '-'}</>;
+          return <>{record?.description || '-'}</>;
         },
       },
       {
         title: 'Kode Supplier',
         dataIndex: 'supplier_code',
         render: (_: any, record: any) => {
-          return <>{record?.product_digital_master?.supplier_code || '-'}</>;
+          return <>{record?.supplier_code || '-'}</>;
         },
       },
       {
         title: 'Supplier',
         dataIndex: 'supplier',
         render: (_: any, record: any) => {
-          return <>{record?.supplier?.name || '-'}</>;
+          return <>{record?.product_companies?.supplier?.name || '-'}</>;
         },
       },
       {
         title: 'Komisi',
         dataIndex: 'buy_price',
         render: (_: string, record: any) => {
-          const buyPrice = +record?.product_digital_master?.buy_price;
+          const buyPrice = +record?.buy_price;
 
           return formatRupiah(+buyPrice);
         },
@@ -376,7 +376,7 @@ const ListProductMaster = () => {
         title: 'Aksi',
         dataIndex: 'action',
         render: (_: any, record: any) => {
-          const isAktif = record?.status === '1';
+          const isAktif = record?.product_companies?.status === 1;
           return (
             <>
               {isAktif ? (
@@ -438,13 +438,6 @@ const ListProductMaster = () => {
                 content={
                   <>
                     <div className="w-[120px]">
-                      <ModalSetMargin
-                        buttonType="link"
-                        disabled={false}
-                        data={record}
-                        productIds={[record?.uuid]}
-                        setSelectedProducts={setSelectedProducts}
-                      />
                       <ModalSetSupplier
                         buttonType="link"
                         disabled={false}
@@ -610,8 +603,9 @@ const ListProductMaster = () => {
             <ModalSetMarginByCategory
               buttonType="default"
               disabled={false}
-              data={{}}
-              productIds={selectedProducts?.map((el) => el?.uuid)}
+              productIds={selectedProducts?.map(
+                (el) => el?.product_companies?.uuid
+              )}
               setSelectedProducts={setSelectedProducts}
             />
           </div>,
@@ -619,8 +613,9 @@ const ListProductMaster = () => {
             <ModalSetMarginByBrand
               buttonType="default"
               disabled={false}
-              data={{}}
-              productIds={selectedProducts?.map((el) => el?.uuid)}
+              productIds={selectedProducts?.map(
+                (el) => el?.product_companies?.uuid
+              )}
               setSelectedProducts={setSelectedProducts}
             />
           </div>,
