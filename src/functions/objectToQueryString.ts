@@ -1,5 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-restricted-syntax */
+
 function objectToQueryString(obj: any) {
   const keyValuePairs = [];
 

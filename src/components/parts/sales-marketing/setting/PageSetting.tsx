@@ -39,6 +39,7 @@ const PageSetting = () => {
   const [cardSelected, setCardSelected] = useState<'ALL' | 'DEFAULT' | null>(
     null
   );
+
   const { data: company } = useQuery({
     queryKey: [SupplierService.Queries.DETAIL, session.user.koperasi_guid],
     queryFn: () => SupplierService.getDetailCompany(session.user.koperasi_guid),
@@ -91,7 +92,6 @@ const PageSetting = () => {
         show_log: true,
       }),
   });
-  console.log(trx);
 
   const handleSubmit = () => {
     if (cardSelected === 'ALL') {
